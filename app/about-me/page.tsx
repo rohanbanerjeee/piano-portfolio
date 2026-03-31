@@ -21,22 +21,26 @@ const fadeUp = {
 const skills = [
   {
     category: "Programming",
-    icon: <Code className="w-5 h-5 text-red-500" />,
+    icon: <Code className="w-5 h-5 text-violet-600" />,
+    gradient: "from-violet-50 via-purple-50/80 to-fuchsia-50/50",
     items: ["C", "RISC-V", "Python", "Java"],
   },
   {
     category: "Hardware Prototyping",
-    icon: <Cpu className="w-5 h-5 text-orange-500" />,
+    icon: <Cpu className="w-5 h-5 text-amber-600" />,
+    gradient: "from-amber-50 via-yellow-50/80 to-orange-50/50",
     items: ["Arduino", "ESP32", "Breadboarding", "FPGA", "VHDL"],
   },
   {
     category: "Software",
-    icon: <Wrench className="w-5 h-5 text-blue-500" />,
+    icon: <Wrench className="w-5 h-5 text-sky-600" />,
+    gradient: "from-sky-50 via-blue-50/80 to-indigo-50/50",
     items: ["Version Control Systems (VCS)", "MySQL"],
   },
   {
     category: "Web & Mobile Dev",
-    icon: <Globe className="w-5 h-5 text-green-500" />,
+    icon: <Globe className="w-5 h-5 text-emerald-600" />,
+    gradient: "from-emerald-50 via-teal-50/80 to-cyan-50/50",
     items: ["HTML", "React", "JavaScript", "CSS", "Flask"],
   },
 ];
@@ -196,7 +200,7 @@ export default function AboutMePage() {
             {skills.map((group) => (
               <div
                 key={group.category}
-                className="rounded-2xl border border-gray-200 bg-white p-5 space-y-3 shadow-sm"
+                className={`rounded-2xl border border-gray-200 bg-gradient-to-br ${group.gradient} p-5 space-y-3 shadow-sm`}
               >
                 <div className="flex items-center gap-2">
                   {group.icon}
@@ -242,7 +246,7 @@ export default function AboutMePage() {
               <span className="text-sm text-gray-800 font-medium">Data Engineering Intern at Lockheed Martin</span>
             </div>
 
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 space-y-2 shadow-sm">
+            <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-sky-50 via-indigo-50/70 to-violet-50/40 p-6 space-y-2 shadow-sm">
               <h3 className="text-lg font-semibold">Software</h3>
               <p className="text-gray-700 text-sm leading-relaxed">
                 I&apos;ve held multiple software engineering internships, including
@@ -254,7 +258,7 @@ export default function AboutMePage() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 space-y-2 shadow-sm">
+            <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-emerald-50 via-teal-50/70 to-cyan-50/40 p-6 space-y-2 shadow-sm">
               <h3 className="text-lg font-semibold">Research</h3>
               <p className="text-gray-700 text-sm leading-relaxed">
                 Currently, I&apos;m a Research Assistant in Georgia Tech&apos;s
