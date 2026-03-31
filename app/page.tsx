@@ -1,41 +1,62 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { Instagram, Linkedin, Github } from "lucide-react";
 
 import LiquidEther from "@/components/liquid-ether";
-import CustomCursor from "@/components/custom-cursor";
+
+const chords: number[][] = [
+  [261.63, 329.63, 392.0],  // C major: C4, E4, G4
+  [293.66, 369.99, 440.0],  // D major: D4, F#4, A4
+  [329.63, 415.3, 493.88],  // E major: E4, G#4, B4
+  [349.23, 440.0, 523.25],  // F major: F4, A4, C5
+];
 
 const whiteKeys = [
   { label: "About Me", href: "/about-me" },
   { label: "Projects", href: "/projects" },
-  { label: "Experiences", href: "/experiences" },
-  { label: "Involvements", href: "/involvements" },
-  { label: "Funzies", href: "/funzies" },
+  {
+    label: "Resume",
+    href: "https://drive.google.com/file/d/1fYzPOfedpD2MXAHPqPXRp_DIxKdVLKAK/view?usp=sharing",
+    external: true,
+  },
+  { label: "Passions", href: "/passions" },
 ];
 
 const blackKeys = [
-  { label: "Bio", href: "/bio", between: 0 }, // Between white keys 0 and 1
-  { label: "Music", href: "/music", between: 1 }, // Between white keys 1 and 2
-  { label: "Tech", href: "/tech", between: 2 }, // Between white keys 2 and 3
-  { label: "Life", href: "/life", between: 3 }, // Between white keys 3 and 4
+  { between: 0 },
+  { between: 1 },
+  { between: 2 },
 ];
 
 export default function Home() {
-  useEffect(() => {
-    const style = document.createElement("style");
-    style.textContent = "* { cursor: none !important; }";
-    document.head.appendChild(style);
-    return () => {
-      document.head.removeChild(style);
-    };
+  const audioCtxRef = useRef<AudioContext | null>(null);
+
+  const playChord = useCallback((frequencies: number[]) => {
+    if (!audioCtxRef.current) {
+      audioCtxRef.current = new AudioContext();
+    }
+    const ctx = audioCtxRef.current;
+
+    frequencies.forEach((freq) => {
+      const oscillator = ctx.createOscillator();
+      const gain = ctx.createGain();
+      oscillator.type = "triangle";
+      oscillator.frequency.value = freq;
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+      oscillator.connect(gain);
+      gain.connect(ctx.destination);
+      oscillator.start();
+      oscillator.stop(ctx.currentTime + 1.2);
+    });
   }, []);
 
   return (
     <>
-      <CustomCursor />
-      <div className="relative min-h-screen overflow-hidden bg-black cursor-none">
+      <div className="relative min-h-screen overflow-hidden bg-black">
         {/* LiquidEther Background - only responds to mouse movement */}
         <div className="absolute inset-0 -z-10">
           <LiquidEther
@@ -60,13 +81,78 @@ export default function Home() {
         {/* Content with semi-transparent overlay to show liquid ether */}
         <div className="relative min-h-screen bg-black/75 flex flex-col items-center justify-end p-0 pb-0">
           {/* Header */}
-          <div className="text-center mb-auto mt-32">
-            <h1 className="text-8xl font-bold text-white mb-4">
-              Rohan Banerjee
-            </h1>
-            <p className="text-xl text-gray-400">
-              Developer • Designer • Creative
-            </p>
+          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 mb-auto mt-24 md:mt-32 px-6 md:px-16">
+            {/* Profile Image */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="w-36 h-36 md:w-44 md:h-44 rounded-full border-2 border-white/15 bg-white/5 shrink-0 flex items-center justify-center overflow-hidden"
+            >
+              <img
+                src="/profile.jpg/IMG_2441.jpeg"
+                alt="Rohan Banerjee"
+                className="w-full h-full object-cover"
+              />
+            </motion.div>
+
+            {/* Name, Statement, Socials */}
+            <div className="text-center md:text-left">
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="text-5xl md:text-7xl font-bold text-white mb-3"
+                style={{ fontFamily: "var(--font-playfair)" }}
+              >
+                Rohan Banerjee
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.15 }}
+                className="text-base md:text-lg text-gray-400 max-w-lg leading-relaxed"
+              >
+                A passionate second-year Computer Engineering major at Georgia Tech,
+                interested in chip design, embedded systems, and software engineering.
+              </motion.p>
+
+              {/* Social Links */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="flex items-center justify-center md:justify-start gap-5 mt-5"
+              >
+                <a
+                  href="https://www.instagram.com/rban_25"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className="text-gray-500 hover:text-white transition-colors"
+                >
+                  <Instagram className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/rohanbanerjee68/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                  className="text-gray-500 hover:text-white transition-colors"
+                >
+                  <Linkedin className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://github.com/rohanbanerjeee"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                  className="text-gray-500 hover:text-white transition-colors"
+                >
+                  <Github className="w-5 h-5" />
+                </a>
+              </motion.div>
+            </div>
           </div>
 
           {/* Piano Keyboard */}
@@ -79,26 +165,23 @@ export default function Home() {
 
             {/* White Keys */}
             <div className="flex gap-[2px] p-4">
-              {whiteKeys.map((key, index) => (
-                <Link key={index} href={key.href} className="flex-1">
+              {whiteKeys.map((key, index) => {
+                const keyContent = (
                   <motion.div
                     whileHover={{
-                      scale: 1.01,
-                      y: -3,
-                      rotateX: -2,
+                      scale: 1.003,
+                      y: -1,
                     }}
                     whileTap={{
-                      scale: 0.995,
-                      y: 8,
-                      rotateX: 1,
+                      scale: 0.998,
+                      y: 3,
                     }}
                     transition={{
                       type: "spring",
-                      stiffness: 400,
-                      damping: 25,
-                      mass: 0.8,
+                      stiffness: 500,
+                      damping: 30,
                     }}
-                    className="relative h-96 rounded-b-[2rem] cursor-pointer flex items-end justify-center pb-12 group"
+                    className="relative h-96 rounded-b-[2rem] cursor-pointer flex items-end justify-center pb-12 group transition-shadow duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.6),0_0_50px_rgba(255,255,255,0.4),0_0_100px_rgba(255,255,255,0.2),0_0_150px_rgba(255,255,255,0.1)]"
                     style={{
                       background:
                         "linear-gradient(180deg, #ffffff 0%, #f5f5f5 25%, #eeeeee 50%, #e8e8e8 75%, #d0d0d0 100%)",
@@ -147,51 +230,59 @@ export default function Home() {
                       }}
                     />
 
-                    <span className="text-black font-semibold text-2xl relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                    <span className="text-black font-semibold text-2xl relative z-10 opacity-70 group-hover:opacity-100 group-hover:text-amber-500 transition-all duration-300">
                       {key.label}
                     </span>
                   </motion.div>
-                </Link>
-              ))}
-            </div>
+                );
 
-            {/* Black Keys */}
-            <div className="absolute top-4 left-4 right-4 h-72 pointer-events-none">
-              {blackKeys.map((key, index) => {
-                const whiteKeyWidth = 100 / whiteKeys.length;
-                const blackKeyWidth = whiteKeyWidth * 0.55;
-                const centerPercent = (key.between + 1) * whiteKeyWidth;
-                const leftPercent = centerPercent;
+                if (key.external) {
+                  return (
+                    <a
+                      key={index}
+                      href={key.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1"
+                      onClick={() => playChord(chords[index])}
+                    >
+                      {keyContent}
+                    </a>
+                  );
+                }
 
                 return (
                   <Link
                     key={index}
                     href={key.href}
-                    className="pointer-events-auto absolute z-20"
+                    className="flex-1"
+                    onClick={() => playChord(chords[index])}
+                  >
+                    {keyContent}
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Black Keys (decorative) */}
+            <div className="absolute top-4 left-4 right-4 h-72 pointer-events-none">
+              {blackKeys.map((key, index) => {
+                const whiteKeyWidth = 100 / whiteKeys.length;
+                const blackKeyWidth = whiteKeyWidth * 0.55;
+                const centerPercent = (key.between + 1) * whiteKeyWidth;
+
+                return (
+                  <div
+                    key={index}
+                    className="absolute z-20"
                     style={{
-                      left: `${leftPercent}%`,
+                      left: `${centerPercent}%`,
                       width: `${blackKeyWidth}%`,
                       transform: "translateX(-50%)",
                     }}
                   >
-                    <motion.div
-                      whileHover={{
-                        scale: 1.015,
-                        y: -2,
-                        rotateX: -1,
-                      }}
-                      whileTap={{
-                        scale: 0.99,
-                        y: 5,
-                        rotateX: 0.5,
-                      }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 450,
-                        damping: 28,
-                        mass: 0.7,
-                      }}
-                      className="relative h-72 rounded-b-[1.5rem] cursor-pointer flex items-end justify-center pb-10 group"
+                    <div
+                      className="relative h-72 rounded-b-[1.5rem]"
                       style={{
                         background:
                           "linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 15%, #1a1a1a 40%, #0a0a0a 65%, #000000 100%)",
@@ -208,11 +299,8 @@ export default function Home() {
                       `,
                         border: "1px solid rgba(0, 0, 0, 0.95)",
                         borderTop: "1px solid rgba(80, 80, 80, 0.3)",
-                        transformStyle: "preserve-3d",
-                        transformPerspective: 1000,
                       }}
                     >
-                      {/* Glossy highlight on black key - enhanced realistic shine */}
                       <div
                         className="absolute top-0 left-2 right-2 h-14 rounded-t-[1rem] opacity-90"
                         style={{
@@ -223,7 +311,6 @@ export default function Home() {
                         }}
                       />
 
-                      {/* Side lighting - left edge highlight */}
                       <div
                         className="absolute top-0 bottom-0 left-0 w-1.5 rounded-tl-[1.5rem]"
                         style={{
@@ -232,7 +319,6 @@ export default function Home() {
                         }}
                       />
 
-                      {/* Bottom bevel - enhanced depth */}
                       <div
                         className="absolute bottom-0 left-0 right-0 h-10 rounded-b-[1.5rem]"
                         style={{
@@ -240,12 +326,8 @@ export default function Home() {
                             "linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.7) 100%)",
                         }}
                       />
-
-                      <span className="text-white font-medium text-base relative z-10 opacity-60 group-hover:opacity-100 transition-opacity">
-                        {key.label}
-                      </span>
-                    </motion.div>
-                  </Link>
+                    </div>
+                  </div>
                 );
               })}
             </div>
