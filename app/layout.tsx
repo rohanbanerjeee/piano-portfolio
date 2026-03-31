@@ -10,9 +10,8 @@ const playfair = Playfair_Display({ subsets: ["latin"], weight: ["400", "700"], 
 const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-dm-sans" });
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: "Rohan Banerjee",
+  description: "Rohan Banerjee's portfolio",
 }
 
 export default function RootLayout({
