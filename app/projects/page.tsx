@@ -80,6 +80,7 @@ type HackathonFullProject = {
   youtubeUrl?: string;
   devpostUrl?: string;
   githubUrl?: string;
+  liveUrl?: string;
   award?: string;
 };
 
@@ -210,6 +211,7 @@ const hackathonProjects: HackathonEntry[] = [
       "Google Places",
     ],
     githubUrl: "https://github.com/nm121212/ClaudeHack",
+    liveUrl: "https://claude-hack-two.vercel.app/",
     images: [
       "/NutriGO/team.jpeg",
       "/NutriGO/screenshot-1.png",
@@ -517,6 +519,17 @@ function HackathonFullCard({
                 <h2 className="text-xl font-bold text-slate-900">{project.title}</h2>
               </div>
               <div className="flex shrink-0 flex-wrap justify-end gap-2">
+                {project.liveUrl && (
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 rounded-full border border-emerald-200/90 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 transition hover:bg-emerald-100 hover:text-emerald-900"
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                    Live Demo
+                  </a>
+                )}
                 {project.githubUrl && (
                   <a
                     href={project.githubUrl}
