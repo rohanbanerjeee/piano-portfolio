@@ -212,9 +212,9 @@ const hackathonProjects: HackathonEntry[] = [
     githubUrl: "https://github.com/nm121212/ClaudeHack",
     images: [
       "/NutriGO/team.jpeg",
-      "/NutriGO/macros.png",
-      "/NutriGO/discover.png",
-      "/NutriGO/battle.png",
+      "/NutriGO/screenshot-1.png",
+      "/NutriGO/screenshot-2.png",
+      "/NutriGO/screenshot-3.png",
     ],
   },
   {
