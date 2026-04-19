@@ -17,6 +17,8 @@ import {
   Zap,
   Github,
   ExternalLink,
+  Swords,
+  Trophy,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -73,9 +75,12 @@ type HackathonFullProject = {
   bullets: string[];
   tags: string[];
   image?: string;
+  images?: string[];
   video?: string;
   youtubeUrl?: string;
   devpostUrl?: string;
+  githubUrl?: string;
+  award?: string;
 };
 
 type HackathonEntry = HackathonFullProject | PlaceholderProject;
@@ -177,6 +182,41 @@ const projects: ProjectEntry[] = [
 ];
 
 const hackathonProjects: HackathonEntry[] = [
+  {
+    title: "NutriGO — Eat. Snap. Battle.",
+    event: "Claude Builder Club Hackathon",
+    dates: "Apr 2026",
+    award: "3rd Place",
+    icon: Swords,
+    gradient: "from-emerald-100/95 via-lime-50/75 to-amber-50/40",
+    iconColor: "text-emerald-700",
+    overview:
+      "A gamified nutrition app where your diet is your army. Eat at real restaurants near you, snap a photo, and Claude scores the meal — turning every healthy choice into collectible cards you can battle friends with 1v1. The cleaner you eat this week, the stronger your deck on Sunday.",
+    bullets: [
+      "Built a location-aware Discover map seeded with real Midtown and West Midtown Atlanta restaurant data, AI-cleaned and nutrition-scored so each pin shows its top 5 healthiest dishes with macros, a 0–100 health score, and the card fragment that dish would unlock. Restaurant tier (Standard / Healthy / Legendary) gates the rarity of cards you can earn there, turning every block into a treasure map for your deck.",
+      "Wired Claude's vision API into a one-tap Snap flow on the Macros home screen — the camera opens, Claude identifies the dish, estimates calories and the protein/carbs/fat split, and returns a 0–100 health score with one sentence of plain-English reasoning. Animated macro rings and a scrubable day selector make daily logging take seconds with zero manual entry.",
+      "Designed the Battle system as the competitive payoff: a Collection of cards dynamically generated from Atlanta restaurants where HP scales with calories, ATK with protein, and DEF inversely with fat. Players assemble a 6-card deck and duel turn-by-turn with Attack / Ability / Retreat actions, five wired abilities (Shield, Double Strike, Leech, Airstrike, Rally), and a live combat log that narrates every hit.",
+      "Shipped a Twilio + Claude SMS layer so users can log meals over plain text — \"Chipotle chicken bowl\" or a photo gets a reply with macros, fragments earned, and deck status. The agent has full context of the user's macro goals, streak, and collection, so it can also answer \"how am I doing today?\" or \"what should I eat near JFK?\" without ever opening the app.",
+      "Stack: React Native (Expo) for mobile with Zustand + AsyncStorage, a Vite + React + TypeScript web companion sharing the same card schema and battle engine, Claude Sonnet for vision and menu ranking, Twilio for SMS routing, and React Native Maps + Google Places for the discovery surface.",
+    ],
+    tags: [
+      "React Native",
+      "Expo",
+      "TypeScript",
+      "Vite",
+      "Claude API",
+      "Twilio",
+      "Zustand",
+      "Google Places",
+    ],
+    githubUrl: "https://github.com/nm121212/ClaudeHack",
+    images: [
+      "/NutriGO/team.jpeg",
+      "/NutriGO/macros.png",
+      "/NutriGO/discover.png",
+      "/NutriGO/battle.png",
+    ],
+  },
   {
     title: "HarmonyAPI",
     event: "HackGT 12: Midnight at the Museum",
@@ -467,18 +507,39 @@ function HackathonFullCard({
         <div className="p-6 space-y-4">
           <div>
             <div className="flex items-start justify-between gap-3">
-              <h2 className="text-xl font-bold text-slate-900">{project.title}</h2>
-              {project.devpostUrl && (
-                <a
-                  href={project.devpostUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex shrink-0 items-center gap-1.5 rounded-full border border-slate-200/90 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
-                >
-                  <ExternalLink className="h-3 w-3" />
-                  Devpost
-                </a>
-              )}
+              <div className="space-y-2">
+                {project.award && (
+                  <Badge className="bg-amber-100 text-amber-800 border-amber-200 w-fit">
+                    <Trophy className="w-3 h-3 mr-1" />
+                    {project.award}
+                  </Badge>
+                )}
+                <h2 className="text-xl font-bold text-slate-900">{project.title}</h2>
+              </div>
+              <div className="flex shrink-0 flex-wrap justify-end gap-2">
+                {project.githubUrl && (
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 rounded-full border border-slate-200/90 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+                  >
+                    <Github className="h-3 w-3" />
+                    GitHub
+                  </a>
+                )}
+                {project.devpostUrl && (
+                  <a
+                    href={project.devpostUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 rounded-full border border-slate-200/90 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                    Devpost
+                  </a>
+                )}
+              </div>
             </div>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-sm text-slate-500">
               <span className="flex items-center gap-1.5">
@@ -494,9 +555,22 @@ function HackathonFullCard({
 
           <p className="text-slate-600 text-sm leading-relaxed">{project.overview}</p>
 
-          {(project.image || project.video || project.youtubeUrl) && (
+          {(project.image || project.images?.length || project.video || project.youtubeUrl) && (
             <div className="flex flex-wrap gap-4">
-              {project.image && (
+              {project.images?.map((img, j) => (
+                <div
+                  key={j}
+                  className="overflow-hidden rounded-xl border border-slate-200/80 w-44 sm:w-52"
+                >
+                  <img
+                    src={img}
+                    alt={`${project.title} screenshot ${j + 1}`}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+              {project.image && !project.images && (
                 <div className="overflow-hidden rounded-xl border border-slate-200/80 max-w-sm">
                   <img
                     src={project.image}
